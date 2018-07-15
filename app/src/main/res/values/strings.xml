@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">HelloKotlin</string>
+    <string name="name_hint">Please enter your name</string>
+    <string name="hello_button_label">Say Hello</string>
+    <string name="greeting">Hello, %s!</string>
+    <string name="hi_button_label">Say Hi</string>
+    <string name="num_in_space">There are %s people in space</string>
+    <string name="get_astronauts">Get Astronauts</string>
+    <string name="about">About Hello, Kotlin</string>
+    <string name="clear_database">Clear Database</string>
+    <string name="hello_world">Hello World!</string>
+</resources>

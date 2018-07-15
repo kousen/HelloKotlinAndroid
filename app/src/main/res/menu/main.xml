@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/update_astronauts"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:title="@string/get_astronauts" />
+    <item
+        android:id="@+id/clear_database"
+        android:icon="@android:drawable/btn_minus"
+        app:showAsAction="ifRoom"
+        android:title="@string/clear_database" />
+    <item
+        android:id="@+id/about"
+        app:showAsAction="never"
+        android:title="@string/about" />
+</menu>
