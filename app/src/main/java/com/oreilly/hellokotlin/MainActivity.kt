@@ -3,6 +3,8 @@ package com.oreilly.hellokotlin
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import com.oreilly.hellokotlin.R.id.edit_text
+import com.oreilly.hellokotlin.R.id.hello_button
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.startActivity
 
