@@ -5,16 +5,19 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
-import com.oreilly.hellokotlin.R.id.*
 import com.oreilly.hellokotlin.astro.AstroRequest
-import com.oreilly.hellokotlin.db.NamesDAO
+import com.oreilly.hellokotlin.db.PeopleDatabase
+import com.oreilly.hellokotlin.db.Person
+import com.oreilly.hellokotlin.db.PersonDAO
 import kotlinx.android.synthetic.main.activity_welcome.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 
 class WelcomeActivity : AppCompatActivity() {
-
+    private val dataSource by lazy {
+        PeopleDatabase.getInstance(this).personDao()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,26 +34,26 @@ class WelcomeActivity : AppCompatActivity() {
         insertNameAndUpdateView(name)
     }
 
-    private fun insertNameAndUpdateView(name: String) {
+    private fun insertNameAndUpdateView(nameValue: String) {
+        val person = Person(name = nameValue)
         doAsync {
-            val dao = NamesDAO(applicationContext)
-            if (!dao.exists(name)) {
-                dao.insertName(name)
+            if (!dataSource.exists(person.name)) {
+                dataSource.insertPerson(person)
             }
-            val names = dao.getAllNames()
+            val names = dataSource.getAllPeople()
 
             uiThread {
                 names_list.adapter = ArrayAdapter<String>(
                         this@WelcomeActivity,
                         android.R.layout.simple_list_item_1,
-                        names)
+                        names.map(Person::name))
             }
         }
     }
 
     private fun deleteAllNames() {
         doAsync {
-            NamesDAO(applicationContext).deleteAllNames()
+            dataSource.deleteAllPeople()
 
             uiThread {
                 names_list.adapter = ArrayAdapter<String>(

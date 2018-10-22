@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">HelloKotlin</string>
-    <string name="name_hint">Please enter your name</string>
+    <string name="name_hint">Please enter your person</string>
     <string name="hello_button_label">Say Hello</string>
     <string name="greeting">Hello, %s!</string>
     <string name="hi_button_label">Say Hi</string>

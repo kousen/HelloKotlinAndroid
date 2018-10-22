@@ -10,7 +10,6 @@ import androidx.test.rule.ActivityTestRule
 import org.junit.Rule
 import org.junit.Test
 
-//@RunWith(AndroidJUnit4::class)
 class EspressoTest {
 
     // Alternative is @JvmField and @Rule instead of annotating getter
