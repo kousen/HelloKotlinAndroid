@@ -19,9 +19,9 @@ abstract class PeopleDatabase : RoomDatabase() {
                 }
 
         private fun buildDatabase(context: Context) =
-                Room.inMemoryDatabaseBuilder(context.applicationContext,
-                        PeopleDatabase::class.java)
-                        .allowMainThreadQueries()
+                Room.databaseBuilder(context.applicationContext,
+                        PeopleDatabase::class.java, "people.db")
+                        //.allowMainThreadQueries()
                         .build()
     }
 }
