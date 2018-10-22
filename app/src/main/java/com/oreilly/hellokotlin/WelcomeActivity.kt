@@ -1,11 +1,10 @@
 package com.oreilly.hellokotlin
 
 import android.os.Bundle
-import android.provider.Settings.Global.getString
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import com.oreilly.hellokotlin.R.id.*
 import com.oreilly.hellokotlin.astro.AstroRequest
 import com.oreilly.hellokotlin.db.NamesDAO
