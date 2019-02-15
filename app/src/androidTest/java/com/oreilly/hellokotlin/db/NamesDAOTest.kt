@@ -10,7 +10,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class NamesDAOTest {
+class NamesDbTest {
     private val dao = NamesDAO(InstrumentationRegistry.getTargetContext())
 
     @Before
