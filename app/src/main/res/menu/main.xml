@@ -12,6 +12,9 @@
         app:showAsAction="ifRoom"
         android:title="@string/clear_database" />
     <item
+        android:id="@+id/stackoverflow"
+        android:title="@string/stack_overflow" />
+    <item
         android:id="@+id/about"
         app:showAsAction="never"
         android:title="@string/about" />

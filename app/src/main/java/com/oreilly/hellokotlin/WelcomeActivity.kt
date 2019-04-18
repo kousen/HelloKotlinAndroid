@@ -1,15 +1,15 @@
 package com.oreilly.hellokotlin
 
 import android.os.Bundle
-import android.provider.Settings.Global.getString
-import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
-import com.oreilly.hellokotlin.R.id.*
+import androidx.appcompat.app.AppCompatActivity
 import com.oreilly.hellokotlin.astro.AstroRequest
 import com.oreilly.hellokotlin.db.NamesDAO
 import kotlinx.android.synthetic.main.activity_welcome.*
+import org.jetbrains.anko.browse
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
@@ -23,7 +23,7 @@ class WelcomeActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val name = intent.extras["user"] as String
+        val name = intent.getStringExtra("user")
 
         welcome_text.text = String.format(
                 getString(R.string.greeting),
@@ -68,22 +68,16 @@ class WelcomeActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
-            when (item?.itemId) {
-                R.id.update_astronauts -> {
-                    updateAstronauts()
-                    true
-                }
-                R.id.clear_database -> {
-                    deleteAllNames()
-                    true
-                }
-                R.id.about -> {
-                    toast("Hello Kotlin v1.0")
-                    true
-                }
-                else -> super.onOptionsItemSelected(item)
-            }
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.update_astronauts -> updateAstronauts()
+            R.id.clear_database -> deleteAllNames()
+            R.id.stackoverflow -> browse("http://stackoverflow.com")
+            R.id.about -> toast("Hello Kotlin v1.0")
+            else -> super.onOptionsItemSelected(item)
+        }
+        return true
+    }
 
     private fun updateAstronauts() {
         doAsync {

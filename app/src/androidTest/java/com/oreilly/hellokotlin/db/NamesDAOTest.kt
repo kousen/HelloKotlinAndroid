@@ -1,19 +1,22 @@
 package com.oreilly.hellokotlin.db
 
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
+import android.content.Context
 import android.util.Log
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.containsInAnyOrder
+import org.junit.After
 import org.junit.Assert.*
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class NamesDbTest {
-    private val dao = NamesDAO(InstrumentationRegistry.getTargetContext())
+class NamesDAOTest {
+    private val dao: NamesDAO
+        get() = NamesDAO(ApplicationProvider.getApplicationContext<Context>())
 
-    @Before
+    @After
     fun init() {
         dao.deleteAllNames()
     }

@@ -4,22 +4,19 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import org.jetbrains.anko.db.*
 
-class DatabaseHelper(ctx: Context) : ManagedSQLiteOpenHelper(
-        ctx, DB_NAME, null, DB_VERSION) {
+class DatabaseHelper private constructor(ctx: Context) :
+        ManagedSQLiteOpenHelper(ctx, "names.db", null, 1) {
+
+    init {
+        instance = this
+    }
 
     companion object {
-        const val DB_NAME = "names.db"
-        const val DB_VERSION = 1
-
         private var instance: DatabaseHelper? = null
 
         @Synchronized
-        fun getInstance(ctx: Context): DatabaseHelper {
-            if (instance == null) {
-                instance = DatabaseHelper(ctx.applicationContext)
-            }
-            return instance!!
-        }
+        fun getInstance(ctx: Context) =
+                instance ?: DatabaseHelper(ctx.applicationContext)
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -35,4 +32,4 @@ class DatabaseHelper(ctx: Context) : ManagedSQLiteOpenHelper(
 }
 
 val Context.database: DatabaseHelper
-    get() = DatabaseHelper.getInstance(applicationContext)
+    get() = DatabaseHelper.getInstance(this)
