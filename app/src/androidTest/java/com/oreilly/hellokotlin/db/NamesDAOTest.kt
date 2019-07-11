@@ -53,8 +53,8 @@ class NamesDAOTest {
 
     @Test
     fun nameExists() {
-        dao.insertName("Fred")
-        assertTrue(dao.exists("Fred"))
+        dao.insertName("Pebbles")
+        assertTrue(dao.exists("Pebbles"))
     }
 
     @Test

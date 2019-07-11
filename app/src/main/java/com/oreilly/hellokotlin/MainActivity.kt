@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         hello_button.setOnClickListener(this::sayHello)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun sayHello(v: View?) {
         val name = edit_text.text.toString()
 
