@@ -2,7 +2,6 @@ package com.oreilly.hellokotlin
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
@@ -11,7 +10,10 @@ import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.oreilly.hellokotlin.astro.AstroResult
-import com.oreilly.hellokotlin.db.*
+import com.oreilly.hellokotlin.db.AppDatabase
+import com.oreilly.hellokotlin.db.User
+import com.oreilly.hellokotlin.db.UserDAO
+import com.oreilly.hellokotlin.db.UserRepository
 import kotlinx.android.synthetic.main.activity_welcome.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -63,7 +65,6 @@ class WelcomeActivity : AppCompatActivity() {
                     android.R.layout.simple_list_item_1,
                     arrayListOf())
             welcome_text.text = getString(R.string.hello_world)
-
         }
     }
 
@@ -96,16 +97,14 @@ class WelcomeActivity : AppCompatActivity() {
     private fun getAstronauts() {
         lifecycleScope.launch {
             val result = downloadAstroData()
-            withContext(Dispatchers.Main) {
-                val astronauts = result.people.map { "${it.name} on the ${it.craft}" }
-                num_people_text.text = String.format(
-                        getString(R.string.num_in_space),
-                        result.number)
-                astronaut_names_list.adapter = ArrayAdapter<String>(
-                        this@WelcomeActivity,
-                        android.R.layout.simple_list_item_1,
-                        astronauts)
-            }
+            val astronauts = result.people.map { "${it.name} on the ${it.craft}" }
+            num_people_text.text = String.format(
+                    getString(R.string.num_in_space),
+                    result.number)
+            astronaut_names_list.adapter = ArrayAdapter<String>(
+                    this@WelcomeActivity,
+                    android.R.layout.simple_list_item_1,
+                    astronauts)
         }
     }
 }
