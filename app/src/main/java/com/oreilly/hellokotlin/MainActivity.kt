@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.startActivity
+import splitties.activities.start
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,10 +15,10 @@ class MainActivity : AppCompatActivity() {
         hello_button.setOnClickListener(this::sayHello)
     }
 
-    @Suppress("UNUSED_PARAMETER")
     fun sayHello(v: View?) {
         val name = edit_text.text.toString()
-
-        startActivity<WelcomeActivity>("user" to name)
+        start<WelcomeActivity> {
+            putExtra("user", name)
+        }
     }
 }

@@ -1,21 +1,27 @@
 package com.oreilly.hellokotlin
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
-import com.oreilly.hellokotlin.astro.AstroRequest
-import com.oreilly.hellokotlin.db.NamesDAO
+import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
+import com.oreilly.hellokotlin.astro.AstroResult
+import com.oreilly.hellokotlin.db.*
 import kotlinx.android.synthetic.main.activity_welcome.*
-import org.jetbrains.anko.browse
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import splitties.toast.toast
+import java.net.URL
 
 class WelcomeActivity : AppCompatActivity() {
 
+    private lateinit var userDao: UserDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,43 +29,41 @@ class WelcomeActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val name = intent.getStringExtra("user")
+        val name = intent.getStringExtra("user") ?: "World"
 
         welcome_text.text = String.format(
                 getString(R.string.greeting),
                 name)
 
-        insertNameAndUpdateView(name)
+        userDao = AppDatabase.getInstance(this.applicationContext).userDao()
+        insertUserAndUpdateView(name)
     }
 
-    private fun insertNameAndUpdateView(name: String) {
-        doAsync {
-            val dao = NamesDAO(applicationContext)
-            if (!dao.exists(name)) {
-                dao.insertName(name)
+    private fun insertUserAndUpdateView(name: String) {
+        lifecycleScope.launch {
+            val names = withContext(Dispatchers.IO) {
+                val userRepository = UserRepository(userDao)
+                userRepository.insertUser(name)
+                userRepository.allUsers.map(User::name)
             }
-            val names = dao.getAllNames()
-
-            uiThread {
-                names_list.adapter = ArrayAdapter<String>(
-                        this@WelcomeActivity,
-                        android.R.layout.simple_list_item_1,
-                        names)
-            }
+            names_list.adapter = ArrayAdapter<String>(
+                    this@WelcomeActivity,
+                    android.R.layout.simple_list_item_1,
+                    names)
         }
     }
 
-    private fun deleteAllNames() {
-        doAsync {
-            NamesDAO(applicationContext).deleteAllNames()
-
-            uiThread {
-                names_list.adapter = ArrayAdapter<String>(
-                        this@WelcomeActivity,
-                        android.R.layout.simple_list_item_1,
-                        arrayListOf())
-                welcome_text.text = getString(R.string.hello_world)
+    private fun deleteAllUsers() {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                userDao.deleteAll()
             }
+            names_list.adapter = ArrayAdapter<String>(
+                    this@WelcomeActivity,
+                    android.R.layout.simple_list_item_1,
+                    arrayListOf())
+            welcome_text.text = getString(R.string.hello_world)
+
         }
     }
 
@@ -68,26 +72,35 @@ class WelcomeActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.update_astronauts -> updateAstronauts()
-            R.id.clear_database -> deleteAllNames()
-            R.id.stackoverflow -> browse("http://stackoverflow.com")
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.update_astronauts -> getAstronauts()
+            R.id.clear_database -> deleteAllUsers()
+            R.id.stackoverflow -> goToPage("http://stackoverflow.com")
             R.id.about -> toast("Hello Kotlin v1.0")
             else -> super.onOptionsItemSelected(item)
         }
         return true
     }
 
-    private fun updateAstronauts() {
-        doAsync {
-            val result = AstroRequest().execute()
-            val astronauts = result.people.map { "${it.name} on the ${it.craft}" }
-            uiThread {
+    fun goToPage(site: String) =
+            startActivity(Intent(Intent.ACTION_VIEW, site.toUri()))
+
+    private suspend fun downloadAstroData(): AstroResult =
+            withContext(Dispatchers.IO) {
+                Gson().fromJson(
+                        URL("http://api.open-notify.org/astros.json").readText(),
+                        AstroResult::class.java)
+            }
+
+    private fun getAstronauts() {
+        lifecycleScope.launch {
+            val result = downloadAstroData()
+            withContext(Dispatchers.Main) {
+                val astronauts = result.people.map { "${it.name} on the ${it.craft}" }
                 num_people_text.text = String.format(
                         getString(R.string.num_in_space),
                         result.number)
-
                 astronaut_names_list.adapter = ArrayAdapter<String>(
                         this@WelcomeActivity,
                         android.R.layout.simple_list_item_1,
