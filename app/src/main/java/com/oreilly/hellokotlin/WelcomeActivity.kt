@@ -48,7 +48,7 @@ class WelcomeActivity : AppCompatActivity() {
                 userRepository.insertUser(name)
                 userRepository.allUsers.map(User::name)
             }
-            names_list.adapter = ArrayAdapter<String>(
+            names_list.adapter = ArrayAdapter(
                     this@WelcomeActivity,
                     android.R.layout.simple_list_item_1,
                     names)
@@ -84,7 +84,7 @@ class WelcomeActivity : AppCompatActivity() {
         return true
     }
 
-    fun goToPage(site: String) =
+    private fun goToPage(site: String) =
             startActivity(Intent(Intent.ACTION_VIEW, site.toUri()))
 
     private suspend fun downloadAstroData(): AstroResult =
@@ -101,7 +101,7 @@ class WelcomeActivity : AppCompatActivity() {
             num_people_text.text = String.format(
                     getString(R.string.num_in_space),
                     result.number)
-            astronaut_names_list.adapter = ArrayAdapter<String>(
+            astronaut_names_list.adapter = ArrayAdapter(
                     this@WelcomeActivity,
                     android.R.layout.simple_list_item_1,
                     astronauts)
