@@ -3,20 +3,24 @@ package com.oreilly.hellokotlin
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import com.oreilly.hellokotlin.databinding.ActivityMainBinding
 import splitties.activities.start
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        hello_button.setOnClickListener(this::sayHello)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.helloButton.setOnClickListener(this::sayHello)
     }
 
     fun sayHello(v: View?) {
-        val name = edit_text.text.toString()
+        val name = binding.editText.text.toString()
         start<WelcomeActivity> {
             putExtra("user", name)
         }

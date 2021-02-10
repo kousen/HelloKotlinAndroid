@@ -10,11 +10,11 @@ import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.oreilly.hellokotlin.astro.AstroResult
+import com.oreilly.hellokotlin.databinding.ActivityWelcomeBinding
 import com.oreilly.hellokotlin.db.AppDatabase
 import com.oreilly.hellokotlin.db.User
 import com.oreilly.hellokotlin.db.UserDAO
 import com.oreilly.hellokotlin.db.UserRepository
-import kotlinx.android.synthetic.main.activity_welcome.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,16 +24,18 @@ import java.net.URL
 class WelcomeActivity : AppCompatActivity() {
 
     private lateinit var userDao: UserDAO
+    private lateinit var binding: ActivityWelcomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_welcome)
+        binding = ActivityWelcomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val name = intent.getStringExtra("user") ?: "World"
 
-        welcome_text.text = String.format(
+        binding.welcomeText.text = String.format(
                 getString(R.string.greeting),
                 name)
 
@@ -48,7 +50,7 @@ class WelcomeActivity : AppCompatActivity() {
                 userRepository.insertUser(name)
                 userRepository.allUsers.map(User::name)
             }
-            names_list.adapter = ArrayAdapter(
+            binding.namesList.adapter = ArrayAdapter(
                     this@WelcomeActivity,
                     android.R.layout.simple_list_item_1,
                     names)
@@ -60,11 +62,11 @@ class WelcomeActivity : AppCompatActivity() {
             withContext(Dispatchers.IO) {
                 userDao.deleteAll()
             }
-            names_list.adapter = ArrayAdapter<String>(
+            binding.namesList.adapter = ArrayAdapter<String>(
                     this@WelcomeActivity,
                     android.R.layout.simple_list_item_1,
                     arrayListOf())
-            welcome_text.text = getString(R.string.hello_world)
+            binding.welcomeText.text = getString(R.string.hello_world)
         }
     }
 
@@ -98,10 +100,10 @@ class WelcomeActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val result = downloadAstroData()
             val astronauts = result.people.map { "${it.name} on the ${it.craft}" }
-            num_people_text.text = String.format(
+            binding.numPeopleText.text = String.format(
                     getString(R.string.num_in_space),
                     result.number)
-            astronaut_names_list.adapter = ArrayAdapter(
+            binding.astronautNamesList.adapter = ArrayAdapter(
                     this@WelcomeActivity,
                     android.R.layout.simple_list_item_1,
                     astronauts)
