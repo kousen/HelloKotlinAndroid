@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
@@ -18,7 +19,6 @@ import com.oreilly.hellokotlin.db.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import splitties.toast.toast
 import java.net.URL
 
 class WelcomeActivity : AppCompatActivity() {
@@ -79,14 +79,15 @@ class WelcomeActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.update_astronauts -> getAstronauts()
             R.id.clear_database -> deleteAllUsers()
-            R.id.stackoverflow -> goToPage("http://stackoverflow.com")
-            R.id.about -> toast("Hello Kotlin v1.0")
+            R.id.stackoverflow -> goToPage()
+            R.id.about -> Toast.makeText(this, "Hello Kotlin v1.0",
+                Toast.LENGTH_SHORT).show()
             else -> super.onOptionsItemSelected(item)
         }
         return true
     }
 
-    private fun goToPage(site: String) =
+    private fun goToPage(site: String = "http://stackoverflow.com") =
             startActivity(Intent(Intent.ACTION_VIEW, site.toUri()))
 
     private suspend fun downloadAstroData(): AstroResult =
