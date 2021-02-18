@@ -1,10 +1,10 @@
 package com.oreilly.hellokotlin
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.oreilly.hellokotlin.databinding.ActivityMainBinding
-import splitties.activities.start
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity() {
 
     fun sayHello(v: View?) {
         val name = binding.editText.text.toString()
-        start<WelcomeActivity> {
-            putExtra("user", name)
-        }
+        val intent = Intent(this, WelcomeActivity::class.java)
+        intent.putExtra("user", name)
+        startActivity(intent)
     }
 }
