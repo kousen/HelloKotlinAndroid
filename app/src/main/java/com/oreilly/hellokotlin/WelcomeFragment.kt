@@ -1,17 +1,17 @@
 package com.oreilly.hellokotlin
 
 import android.content.Intent
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.oreilly.hellokotlin.astro.AstroResult
-import com.oreilly.hellokotlin.databinding.ActivityWelcomeBinding
+import com.oreilly.hellokotlin.databinding.WelcomeFragmentBinding
 import com.oreilly.hellokotlin.db.AppDatabase
 import com.oreilly.hellokotlin.db.User
 import com.oreilly.hellokotlin.db.UserDAO
@@ -21,26 +21,28 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.URL
 
-class WelcomeActivity : AppCompatActivity() {
+class WelcomeFragment : Fragment() {
 
     private lateinit var userDao: UserDAO
-    private lateinit var binding: ActivityWelcomeBinding
+    private lateinit var binding: WelcomeFragmentBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityWelcomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    private val viewModel: WelcomeViewModel by lazy {
+        ViewModelProvider(this).get(WelcomeViewModel::class.java)
+    }
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        binding = WelcomeFragmentBinding.inflate(layoutInflater)
 
-        val name = intent.getStringExtra("user") ?: "World"
+//        binding.welcomeText.text = String.format(
+//                getString(R.string.greeting),
+//                name)
 
-        binding.welcomeText.text = String.format(
-                getString(R.string.greeting),
-                name)
+        userDao = AppDatabase.getInstance(requireContext()).userDao()
+//        insertUserAndUpdateView(name)
 
-        userDao = AppDatabase.getInstance(this.applicationContext).userDao()
-        insertUserAndUpdateView(name)
+        setHasOptionsMenu(true)
+        return binding.root
     }
 
     private fun insertUserAndUpdateView(name: String) {
@@ -51,7 +53,7 @@ class WelcomeActivity : AppCompatActivity() {
                 userRepository.allUsers.map(User::name)
             }
             binding.namesList.adapter = ArrayAdapter(
-                    this@WelcomeActivity,
+                    requireContext(),
                     android.R.layout.simple_list_item_1,
                     names)
         }
@@ -63,16 +65,16 @@ class WelcomeActivity : AppCompatActivity() {
                 userDao.deleteAll()
             }
             binding.namesList.adapter = ArrayAdapter<String>(
-                    this@WelcomeActivity,
+                    requireContext(),
                     android.R.layout.simple_list_item_1,
                     arrayListOf())
             binding.welcomeText.text = getString(R.string.hello_world)
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return true
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -80,8 +82,8 @@ class WelcomeActivity : AppCompatActivity() {
             R.id.update_astronauts -> getAstronauts()
             R.id.clear_database -> deleteAllUsers()
             R.id.stackoverflow -> goToPage()
-            R.id.about -> Toast.makeText(this, "Hello Kotlin v1.0",
-                Toast.LENGTH_SHORT).show()
+            R.id.about -> Toast.makeText(context, "Hello Kotlin v1.0",
+                    Toast.LENGTH_SHORT).show()
             else -> super.onOptionsItemSelected(item)
         }
         return true
@@ -105,9 +107,10 @@ class WelcomeActivity : AppCompatActivity() {
                     getString(R.string.num_in_space),
                     result.number)
             binding.astronautNamesList.adapter = ArrayAdapter(
-                    this@WelcomeActivity,
+                    requireContext(),
                     android.R.layout.simple_list_item_1,
                     astronauts)
         }
     }
+
 }

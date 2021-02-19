@@ -1,37 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<fragment
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_host_fragment"
+    android:name="androidx.navigation.fragment.NavHostFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
-
-    <TextView
-        android:id="@+id/text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world"
-        android:textSize="24sp"
-        />
-    <EditText
-        android:id="@+id/edit_text"
-        android:inputType="textCapWords"
-        android:hint="@string/name_hint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="@tools:sample/first_names" />
-
-    <Button
-        android:id="@+id/hello_button"
-        android:text="@string/hello_button_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:text="@string/hi_button_label"
-        android:onClick="sayHello"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>
+    app:defaultNavHost="true"
+    app:navGraph="@navigation/nav_graph" />
