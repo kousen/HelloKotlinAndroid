@@ -11,7 +11,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.oreilly.hellokotlin.astro.AstroApi
 import com.oreilly.hellokotlin.databinding.ActivityWelcomeBinding
-import com.oreilly.hellokotlin.db.AppDatabase
+import com.oreilly.hellokotlin.db.UserDatabase
 import com.oreilly.hellokotlin.db.User
 import com.oreilly.hellokotlin.db.UserDAO
 import com.oreilly.hellokotlin.db.UserRepository
@@ -37,7 +37,7 @@ class WelcomeActivity : AppCompatActivity() {
                 getString(R.string.greeting),
                 name)
 
-        userDao = AppDatabase.getInstance(this.applicationContext).userDao()
+        userDao = UserDatabase.getInstance(this.applicationContext).userDao
         insertUserAndUpdateView(name)
     }
 
