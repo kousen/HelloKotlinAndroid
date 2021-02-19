@@ -9,8 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
-import com.google.gson.Gson
-import com.oreilly.hellokotlin.astro.AstroResult
+import com.oreilly.hellokotlin.astro.AstroApi
 import com.oreilly.hellokotlin.databinding.ActivityWelcomeBinding
 import com.oreilly.hellokotlin.db.AppDatabase
 import com.oreilly.hellokotlin.db.User
@@ -19,7 +18,6 @@ import com.oreilly.hellokotlin.db.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.net.URL
 
 class WelcomeActivity : AppCompatActivity() {
 
@@ -81,7 +79,7 @@ class WelcomeActivity : AppCompatActivity() {
             R.id.clear_database -> deleteAllUsers()
             R.id.stackoverflow -> goToPage()
             R.id.about -> Toast.makeText(this, "Hello Kotlin v1.0",
-                Toast.LENGTH_SHORT).show()
+                    Toast.LENGTH_SHORT).show()
             else -> super.onOptionsItemSelected(item)
         }
         return true
@@ -90,16 +88,9 @@ class WelcomeActivity : AppCompatActivity() {
     private fun goToPage(site: String = "http://stackoverflow.com") =
             startActivity(Intent(Intent.ACTION_VIEW, site.toUri()))
 
-    private suspend fun downloadAstroData(): AstroResult =
-            withContext(Dispatchers.IO) {
-                Gson().fromJson(
-                        URL("http://api.open-notify.org/astros.json").readText(),
-                        AstroResult::class.java)
-            }
-
     private fun getAstronauts() {
         lifecycleScope.launch {
-            val result = downloadAstroData()
+            val result = AstroApi.retrofitService.getAstroResult()
             val astronauts = result.people.map { "${it.name} on the ${it.craft}" }
             binding.numPeopleText.text = String.format(
                     getString(R.string.num_in_space),
