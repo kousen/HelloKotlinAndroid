@@ -6,21 +6,23 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
-import com.oreilly.hellokotlin.astro.AstroApi
 import com.oreilly.hellokotlin.databinding.ActivityWelcomeBinding
-import com.oreilly.hellokotlin.db.UserDatabase
 import com.oreilly.hellokotlin.db.User
 import com.oreilly.hellokotlin.db.UserDAO
+import com.oreilly.hellokotlin.db.UserDatabase
 import com.oreilly.hellokotlin.db.UserRepository
+import com.oreilly.hellokotlin.ui.WelcomeViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class WelcomeActivity : AppCompatActivity() {
 
+    private val viewModel: WelcomeViewModel by viewModels()
     private lateinit var userDao: UserDAO
     private lateinit var binding: ActivityWelcomeBinding
 
@@ -89,8 +91,7 @@ class WelcomeActivity : AppCompatActivity() {
             startActivity(Intent(Intent.ACTION_VIEW, site.toUri()))
 
     private fun getAstronauts() {
-        lifecycleScope.launch {
-            val result = AstroApi.retrofitService.getAstroResult()
+        viewModel.astroResult.observe(this) { result ->
             val astronauts = result.people.map { "${it.name} on the ${it.craft}" }
             binding.numPeopleText.text = String.format(
                     getString(R.string.num_in_space),
