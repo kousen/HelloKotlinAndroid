@@ -1,27 +1,24 @@
 package com.oreilly.hellokotlin.db
 
 import android.content.Context
-import android.util.Log
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
-class UserDAOTest {
-    companion object {
-        const val TAG = "UserDAOTest"
-    }
+class UserRepositoryTest {
 
     private lateinit var userDao: UserDAO
     private lateinit var db: UserDatabase
+    private lateinit var repository: UserRepository
 
     @Before
     fun createDb() {
@@ -30,6 +27,7 @@ class UserDAOTest {
                 .allowMainThreadQueries()
                 .build()
         userDao = db.userDao
+        repository = UserRepository(userDao)
         // userDao.deleteAll()
     }
 
@@ -40,7 +38,17 @@ class UserDAOTest {
     }
 
     @Test
-    fun insertAndDeleteUser() {
+    fun insertAndDeleteUser() = runBlocking {
+        repository.deleteAllUsers()
+        assertEquals(0, repository.allUsers.first().size)
 
+        repository.insertUser("Picard")
+        assertEquals(1, repository.allUsers.first().size)
+
+        repository.insertUser("Picard")
+        assertEquals(1, repository.allUsers.first().size)
+
+        repository.deleteUsersByName("Picard")
+        assertEquals(0, repository.allUsers.first().size)
     }
 }

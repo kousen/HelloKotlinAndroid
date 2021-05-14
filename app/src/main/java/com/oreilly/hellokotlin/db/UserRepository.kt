@@ -8,15 +8,15 @@ class UserRepository(private val userDao: UserDAO) {
 
     @WorkerThread
     suspend fun insertUser(name: String) {
-        if (userDao.get(name) == null) {
+        if (userDao.count(name) == 0) {
             userDao.insertUsers(User(name))
         } else {
             return
         }
     }
 
-    suspend fun deleteUser(user: User) =
-        userDao.delete(user.name)
+    suspend fun deleteUsersByName(name: String) =
+        userDao.delete(name)
 
     suspend fun deleteAllUsers() =
         userDao.deleteAll()

@@ -12,7 +12,7 @@ interface UserDAO {
     fun get(key: Long): User?
 
     @Query("select count(*) from users where name = :name")
-    fun count(name: String): Int
+    suspend fun count(name: String): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertUsers(vararg users: User)

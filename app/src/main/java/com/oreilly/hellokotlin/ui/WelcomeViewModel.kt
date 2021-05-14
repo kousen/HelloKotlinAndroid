@@ -19,8 +19,8 @@ class WelcomeViewModel(private val repository: UserRepository) : ViewModel() {
         repository.insertUser(name)
     }
 
-    fun delete(user: User) = viewModelScope.launch {
-        repository.deleteUser(user)
+    fun delete(name: String) = viewModelScope.launch {
+        repository.deleteUsersByName(name)
     }
 
     fun deleteAll() = viewModelScope.launch {
