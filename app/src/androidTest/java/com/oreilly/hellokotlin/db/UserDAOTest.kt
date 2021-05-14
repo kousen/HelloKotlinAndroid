@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -39,19 +41,6 @@ class UserDAOTest {
 
     @Test
     fun insertAndDeleteUser() {
-        val picard = User("Picard")
-        val namesBefore = userDao.getAllUsers()
-        Log.i(TAG, "users before insert: $namesBefore")
-        assertEquals(0, namesBefore.size)
 
-        userDao.insertUsers(picard)
-        val namesAfterInsert = userDao.getAllUsers()
-        Log.i(TAG, "users after insert: $namesAfterInsert")
-        assertTrue(namesAfterInsert.map { it.name }.contains("Picard"))
-
-        userDao.delete(picard.name)
-        val namesAfterDelete = userDao.getAllUsers()
-        Log.i(TAG, "users after delete: $namesAfterDelete")
-        assertFalse(namesAfterDelete.map { it.name }.contains("Picard"))
     }
 }

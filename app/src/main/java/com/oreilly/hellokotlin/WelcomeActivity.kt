@@ -16,14 +16,17 @@ import com.oreilly.hellokotlin.db.UserDAO
 import com.oreilly.hellokotlin.db.UserDatabase
 import com.oreilly.hellokotlin.db.UserRepository
 import com.oreilly.hellokotlin.ui.WelcomeViewModel
+import com.oreilly.hellokotlin.ui.WelcomeViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class WelcomeActivity : AppCompatActivity() {
 
-    private val viewModel: WelcomeViewModel by viewModels()
-    private lateinit var userDao: UserDAO
+    private val viewModel: WelcomeViewModel by viewModels {
+        WelcomeViewModelFactory(UserRepository(UserDatabase.getInstance(applicationContext).userDao))
+    }
+
     private lateinit var binding: ActivityWelcomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,43 +34,27 @@ class WelcomeActivity : AppCompatActivity() {
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        val name = intent.getStringExtra("user") ?: "World"
-
-        binding.welcomeText.text = String.format(
-                getString(R.string.greeting),
-                name)
-
-        userDao = UserDatabase.getInstance(this.applicationContext).userDao
-        insertUserAndUpdateView(name)
-    }
-
-    private fun insertUserAndUpdateView(name: String) {
-        lifecycleScope.launch {
-            val names = withContext(Dispatchers.IO) {
-                val userRepository = UserRepository(userDao)
-                userRepository.insertUser(name)
-                userRepository.allUsers.map(User::name)
-            }
-            binding.namesList.adapter = ArrayAdapter(
-                    this@WelcomeActivity,
+        viewModel.allUsers.observe(this) { users ->
+            users.let {
+                binding.namesList.adapter = ArrayAdapter(
+                    this,
                     android.R.layout.simple_list_item_1,
-                    names)
+                    users.map(User::name)
+                )
+            }
+        }
+
+        intent.getStringExtra("user")?.let { name ->
+            binding.welcomeText.text = String.format(
+                    getString(R.string.greeting),
+                    name)
+            viewModel.insert(name)
         }
     }
 
     private fun deleteAllUsers() {
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                userDao.deleteAll()
-            }
-            binding.namesList.adapter = ArrayAdapter<String>(
-                    this@WelcomeActivity,
-                    android.R.layout.simple_list_item_1,
-                    arrayListOf())
-            binding.welcomeText.text = getString(R.string.hello_world)
-        }
+        viewModel.deleteAll()
+        binding.welcomeText.text = getString(R.string.hello_world)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -80,7 +67,9 @@ class WelcomeActivity : AppCompatActivity() {
             R.id.update_astronauts -> getAstronauts()
             R.id.clear_database -> deleteAllUsers()
             R.id.stackoverflow -> goToPage()
-            R.id.about -> Toast.makeText(this, "Hello Kotlin v1.0",
+            R.id.about -> Toast.makeText(
+                this,
+                "Hello Kotlin v2.0",
                     Toast.LENGTH_SHORT).show()
             else -> super.onOptionsItemSelected(item)
         }
