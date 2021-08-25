@@ -17,6 +17,7 @@ interface AstroService {
 }
 
 object AstroApi {
+    // property delegate called "lazy"
     val retrofitService: AstroService by lazy {
         retrofit.create(AstroService::class.java)
     }
