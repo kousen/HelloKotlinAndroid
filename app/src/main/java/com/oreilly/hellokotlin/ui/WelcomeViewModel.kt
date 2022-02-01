@@ -29,7 +29,7 @@ class WelcomeViewModel(private val repository: UserRepository) : ViewModel() {
 }
 
 class WelcomeViewModelFactory(private val repository: UserRepository): ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(WelcomeViewModel::class.java)) {
             return WelcomeViewModel(repository) as T
         }
