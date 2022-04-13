@@ -1,8 +1,16 @@
 package com.oreilly.hellokotlin.astro
 
-data class AstroResult(val message: String,
-                       val number: Number,
-                       val people: List<Assignment>)
+import kotlinx.serialization.Serializable
 
-data class Assignment(val craft: String,
-                      val name: String)
+@Serializable
+data class AstroResult(
+    val message: String,
+    val number: Int,
+    val people: List<Assignment>
+)
+
+@Serializable
+data class Assignment(
+    val name: String,
+    val craft: String,
+)

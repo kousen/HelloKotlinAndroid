@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.oreilly.hellokotlin.databinding.ActivityMainBinding
 
+@Suppress("UNUSED_PARAMETER")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding

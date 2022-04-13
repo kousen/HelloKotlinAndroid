@@ -9,17 +9,12 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import androidx.lifecycle.lifecycleScope
 import com.oreilly.hellokotlin.databinding.ActivityWelcomeBinding
 import com.oreilly.hellokotlin.db.User
-import com.oreilly.hellokotlin.db.UserDAO
 import com.oreilly.hellokotlin.db.UserDatabase
 import com.oreilly.hellokotlin.db.UserRepository
 import com.oreilly.hellokotlin.ui.WelcomeViewModel
 import com.oreilly.hellokotlin.ui.WelcomeViewModelFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class WelcomeActivity : AppCompatActivity() {
 
