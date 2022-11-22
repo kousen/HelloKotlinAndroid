@@ -19,7 +19,9 @@ import com.oreilly.hellokotlin.ui.WelcomeViewModelFactory
 class WelcomeActivity : AppCompatActivity() {
 
     private val viewModel: WelcomeViewModel by viewModels {
-        WelcomeViewModelFactory(UserRepository(UserDatabase.getInstance(applicationContext).userDao))
+        WelcomeViewModelFactory(
+            UserRepository(UserDatabase.getInstance(applicationContext).userDao)
+        )
     }
 
     private lateinit var binding: ActivityWelcomeBinding
@@ -28,6 +30,8 @@ class WelcomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewModel.allUsers.observe(this) { users ->
             users.let {
@@ -65,25 +69,28 @@ class WelcomeActivity : AppCompatActivity() {
             R.id.about -> Toast.makeText(
                 this,
                 "Hello Kotlin v2.0",
-                    Toast.LENGTH_SHORT).show()
+                Toast.LENGTH_SHORT
+            ).show()
             else -> super.onOptionsItemSelected(item)
         }
         return true
     }
 
     private fun goToPage(site: String = "http://stackoverflow.com") =
-            startActivity(Intent(Intent.ACTION_VIEW, site.toUri()))
+        startActivity(Intent(Intent.ACTION_VIEW, site.toUri()))
 
     private fun getAstronauts() {
         viewModel.astroResult.observe(this) { result ->
             val astronauts = result.people.map { "${it.name} on the ${it.craft}" }
             binding.numPeopleText.text = String.format(
-                    getString(R.string.num_in_space),
-                    result.number)
+                getString(R.string.num_in_space),
+                result.number
+            )
             binding.astronautNamesList.adapter = ArrayAdapter(
-                    this@WelcomeActivity,
-                    android.R.layout.simple_list_item_1,
-                    astronauts)
+                this@WelcomeActivity,
+                android.R.layout.simple_list_item_1,
+                astronauts
+            )
         }
     }
 }

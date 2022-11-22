@@ -6,7 +6,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.oreilly.hellokotlin.databinding.ActivityMainBinding
 
-@Suppress("UNUSED_PARAMETER")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -20,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         binding.helloButton.setOnClickListener(this::sayHello)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun sayHello(v: View?) {
         val name = binding.editText.text.toString()
         val intent = Intent(this, WelcomeActivity::class.java)
