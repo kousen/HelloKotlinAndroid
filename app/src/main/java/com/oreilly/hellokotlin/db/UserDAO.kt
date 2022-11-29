@@ -14,15 +14,18 @@ interface UserDAO {
     @Query("select count(*) from users where name = :name")
     suspend fun count(name: String): Int
 
+    @Query("select * from users where name = :name")
+    fun findByName(name: String): List<User>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertUsers(vararg users: User)
 
     @Update
     suspend fun update(user: User)
 
-    @Query("delete from users where name = :name")
-    suspend fun delete(name: String)
+    @Delete
+    suspend fun delete(user: User)
 
-    @Query("delete from users")
-    suspend fun deleteAll()
+    @Delete
+    suspend fun deleteAll(vararg users: User)
 }

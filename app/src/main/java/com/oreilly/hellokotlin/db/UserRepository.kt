@@ -10,13 +10,11 @@ class UserRepository(private val userDao: UserDAO) {
     suspend fun insertUser(name: String) {
         if (userDao.count(name) == 0) {
             userDao.insertUsers(User(name))
-        } else {
-            return
         }
     }
 
     suspend fun deleteUsersByName(name: String) =
-        userDao.delete(name)
+        userDao.findByName(name).forEach { userDao.delete(it) }
 
     suspend fun deleteAllUsers() =
         userDao.deleteAll()

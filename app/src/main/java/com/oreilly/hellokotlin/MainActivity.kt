@@ -21,9 +21,9 @@ class MainActivity : AppCompatActivity() {
 
     @Suppress("UNUSED_PARAMETER")
     fun sayHello(v: View?) {
-        val name = binding.editText.text.toString()
-        val intent = Intent(this, WelcomeActivity::class.java)
-        intent.putExtra("user", name)
-        startActivity(intent)
+        Intent(this, WelcomeActivity::class.java).apply {
+            putExtra(Intent.EXTRA_TEXT, binding.editText.text.toString())
+            startActivity(intent)
+        }
     }
 }

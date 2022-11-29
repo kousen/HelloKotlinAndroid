@@ -45,7 +45,7 @@ class WelcomeActivity : AppCompatActivity() {
 
         // ?. == Safe call --> only do the RHS if the reference is not null
         // let is a scope function that executes a block of code on the current object
-        intent.getStringExtra("user")?.let { name ->
+        intent.getStringExtra(Intent.EXTRA_TEXT)?.let { name ->
             binding.welcomeText.text = String.format(getString(R.string.greeting), name)
             viewModel.insert(name)
         }
