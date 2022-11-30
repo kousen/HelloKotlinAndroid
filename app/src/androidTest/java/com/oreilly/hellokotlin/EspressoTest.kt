@@ -20,7 +20,7 @@ class EspressoTest {
 
     @Test
     fun nameUpdatesTextView() {
-        val scenario = launchActivity<MainActivity>()
+        launchActivity<MainActivity>()
 
         onView(withId(R.id.edit_text))
                 .perform(typeText("Dolly"))
