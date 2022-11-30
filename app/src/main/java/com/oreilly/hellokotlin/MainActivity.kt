@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     fun sayHello(v: View?) {
         Intent(this, WelcomeActivity::class.java).apply {
             putExtra(Intent.EXTRA_TEXT, binding.editText.text.toString())
-            startActivity(intent)
+            startActivity(this)
         }
     }
 }
