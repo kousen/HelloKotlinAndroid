@@ -1,8 +1,8 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.kapt'
-    id "org.jetbrains.kotlin.plugin.serialization" version "1.6.10"
+    alias libs.plugins.android.application
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.kapt
+    alias libs.plugins.kotlin.serialization
 }
 
 android {
@@ -36,42 +36,32 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation libs.android.appcompat
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-    implementation 'androidx.fragment:fragment-ktx:1.5.4'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation libs.coroutines.core
+    implementation libs.coroutines.android
+    implementation libs.fragment.ktx
+    implementation libs.constraintLayout
 
-    implementation 'androidx.lifecycle:lifecycle-common-java8:2.5.1'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation libs.lifecycle.common.java8
+    implementation libs.lifecycle.livedata.ktx
+    implementation libs.lifecycle.viewmodel.ktx
 
-    // Extension libraries
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation libs.core.ktx
+    implementation libs.lifecycle.runtime.ktx
+    implementation libs.lifecycle.viewmodel.ktx
 
-    def room_version = "2.4.3"
+    kapt libs.room.compiler
+    implementation libs.bundles.room
+    androidTestImplementation libs.room.testing
 
-    kapt "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-ktx:$room_version"
-    androidTestImplementation "androidx.room:room-testing:$room_version"
+    testImplementation libs.junit
 
-    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation libs.test.runner
+    androidTestImplementation libs.espresso
+    androidTestImplementation libs.junit.ktx
 
-    androidTestImplementation 'androidx.test:runner:1.5.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
-    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.4'
-    androidTestImplementation 'androidx.test:core-ktx:1.5.0'
+    implementation libs.gson
 
-    implementation 'com.google.code.gson:gson:2.10'
-
-    // Retrofit 2
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1'
-    implementation "com.squareup.okhttp3:okhttp:4.9.3"
-    implementation 'com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0'
+    implementation libs.bundles.retrofit
 }
